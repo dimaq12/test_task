@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  angular:
+    build: frontend 
+    ports:
+      - "4200:4200"
+
+  express: 
+    build: backend 
+    ports:
+      - "3000:3000" 

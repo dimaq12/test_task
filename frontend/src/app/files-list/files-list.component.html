@@ -1,27 +1,50 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Buzz</span>
+    <span class="example-spacer"></span>
+    <button (click)="logOut()"
+       mat-icon-button class="example-icon"
+       aria-label="Example icon-button with menu icon">
+      <mat-icon>login</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
 <div class="app">
   <div class="files-list-holder">
     <div class="list">
-      <mat-card>
+      <mat-card *ngIf="filesList">
         <ng-container *ngFor="let file of filesList; let index = index">
             <div (click)="download(file)" class="link">
                 <a>{{file.originalname}}</a>
+                <span>{{file.size / (1024 * 1024)  | number : '1.2-2'}} MB</span>
             </div>
         </ng-container>
       </mat-card>
     </div>
   </div>
   <div class="downloads">
-    <mat-card>
-      <form [formGroup]="fileForm">
-        <div class="form-group">
-          <label for="file">File</label>
-          <input formControlName="file" id="file" type="file" class="form-control" (change)="onFileChange($event)">
-        </div>
-        <div class="spacing"></div>
-        <button mat-stroked-button [color]="'primary'" [class]="'btn'" (click)="upload()">
-			Upload
-		</button>
-      </form>
-    </mat-card>
+    <div class="downloads-holder">
+      <mat-card>
+        <form [formGroup]="fileForm">
+          <div class="form-group">
+            <button type="button" mat-raised-button (click)="fileInput.click()">Choose File</button>
+            <input hidden (change)="onFileChange($event)" #fileInput type="file" id="file">
+          </div>
+          <div class="spacing"></div>
+          <div *ngIf="fileMeta" class="info">
+            <p>{{fileMeta.name}}</p>
+            <p>{{fileMeta.size / (1024 * 1024)  | number : '1.2-2'}} MB</p>
+          </div>
+          <div *ngIf="error" class="error">
+            File is too large
+          </div>
+          <div class="spacing"></div>
+          <button mat-stroked-button [color]="'primary'" [class]="'btn'" (click)="upload()">
+        Upload
+      </button>
+        </form>
+      </mat-card>
+    </div>
   </div>
 </div>

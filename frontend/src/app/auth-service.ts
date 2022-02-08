@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { environment } from "../environments/environment"
@@ -27,9 +26,7 @@ export class AuthService {
   login(userData: any): void {
     this.httpClient.post(`${ environment.API_URL }/login`, userData).subscribe((userData)=>{
       if(userData) {
-        this.user = userData;
-        localStorage.setItem("user:data", JSON.stringify(userData))
-        this.router.navigate(["/files"])
+        this.addToStorage(userData);
       }
     })
   }
@@ -37,10 +34,19 @@ export class AuthService {
   signUp(signupData: Array<number>): void {
     this.httpClient.post(`${ environment.API_URL }/signup`, signupData).subscribe((userData)=>{
       if(userData) {
-        this.user = userData;
-        localStorage.setItem("user:data", JSON.stringify(userData))
-        this.router.navigate(["/files"])
+        this.addToStorage(userData);
       }
     })
+  }
+
+  logOut(): void{
+    localStorage.removeItem("user:data");
+    this.router.navigate(["/login"])
+  }
+
+  addToStorage(userData: any): void {
+    this.user = userData;
+    localStorage.setItem("user:data", JSON.stringify(userData))
+    this.router.navigate(["/files"])
   }
 }
