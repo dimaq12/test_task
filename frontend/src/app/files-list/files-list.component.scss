@@ -1,0 +1,30 @@
+.app {
+    width: 100%;
+    display: flex;
+}
+.files-list-holder {
+    width: 50%;
+}
+
+.link {
+    cursor: pointer;
+    padding: 10px;
+    margin: 3px 0;
+    &:hover {
+        background: rgba(0, 0, 0, 0.068);
+    }
+}
+
+.list {
+    padding: 20px;
+    max-width: 300px;
+}
+.downloads {
+    width: 50%;
+    padding: 20px;
+    max-width: 300px;
+}
+
+.spacing {
+    padding: 5px 0;
+}
