@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { environment } from "../environments/environment"
+import { Observable, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -23,20 +24,12 @@ export class AuthService {
     return this.user;
   }
 
-  login(userData: any): void {
-    this.httpClient.post(`${ environment.API_URL }/login`, userData).subscribe((userData)=>{
-      if(userData) {
-        this.addToStorage(userData);
-      }
-    })
+  login(userData: any): Observable<any> {
+    return this.httpClient.post(`${ environment.API_URL }/login`, userData)
   }
 
-  signUp(signupData: Array<number>): void {
-    this.httpClient.post(`${ environment.API_URL }/signup`, signupData).subscribe((userData)=>{
-      if(userData) {
-        this.addToStorage(userData);
-      }
-    })
+  signUp(signupData: Array<number>):Observable<any> {
+    return this.httpClient.post(`${ environment.API_URL }/signup`, signupData)
   }
 
   logOut(): void{

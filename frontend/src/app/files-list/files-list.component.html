@@ -13,7 +13,7 @@
 <div class="app">
   <div class="files-list-holder">
     <div class="list">
-      <mat-card *ngIf="filesList">
+      <mat-card *ngIf="filesList && filesList.length">
         <ng-container *ngFor="let file of filesList; let index = index">
             <div (click)="download(file)" class="link">
                 <a>{{file.originalname}}</a>
@@ -37,7 +37,7 @@
             <p>{{fileMeta.size / (1024 * 1024)  | number : '1.2-2'}} MB</p>
           </div>
           <div *ngIf="error" class="error">
-            File is too large
+            {{error}}
           </div>
           <div class="spacing"></div>
           <button mat-stroked-button [color]="'primary'" [class]="'btn'" (click)="upload()">

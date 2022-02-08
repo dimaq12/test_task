@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { switchMap } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 import { FilesService } from './files-service';
 import { AuthService } from '../auth-service';
@@ -15,12 +16,13 @@ import { AuthService } from '../auth-service';
 export class FilesListComponent implements OnInit {
   filesList: any;
   fileMeta: any;
-  error = false;
+  error: any;
   fileForm!: FormGroup;
   constructor(
     private readonly filesService: FilesService,
     @Inject(DOCUMENT) private readonly document: Document,
-    private readonly auth: AuthService
+    private readonly auth: AuthService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -45,9 +47,15 @@ export class FilesListComponent implements OnInit {
 
     this.filesService.upload(formData).pipe(
       switchMap(() => this.filesService.getFilesList())
-    ).subscribe((filesList) => {
-      this.filesList = filesList;
-      this.fileMeta = null;
+    ).subscribe({
+      next: (filesList) => {
+        this.filesList = filesList;
+        this.removeFile()
+      },
+      error: (e) => {
+        this.toastr.error(e.error,);
+        this.removeFile()
+      },
     });
   }
 
@@ -56,10 +64,8 @@ export class FilesListComponent implements OnInit {
       const file = $event.target.files[0];
       const { name, size, type } = file;
       if(size / (1024 * 1024) >  5) {
-        this.error = true;
-        setTimeout(() => {
-          this.error = false;
-        }, 2000)
+        this.toastr.error("File is too large");
+        this.removeFile()
         return;
       }
       this.fileMeta = { name, size, type };
@@ -69,6 +75,13 @@ export class FilesListComponent implements OnInit {
     }
   }
 
+  removeFile(): void{
+    this.fileMeta = null;
+    this.fileForm.patchValue({
+      fileSource: ''
+    });
+  }
+ 
   download(file: any): void {
     const fileId = file.fileId;
     this.filesService.downloadFile(fileId).subscribe((res) => {

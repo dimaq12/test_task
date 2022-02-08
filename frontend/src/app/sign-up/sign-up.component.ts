@@ -34,7 +34,14 @@ export class SignUpComponent {
     }
     if (this.form.valid) {
       const loginData = this.form.value;
-      this.authService.signUp(loginData)
+      this.authService.signUp(loginData).subscribe({
+        next:(userData) => {
+          this.authService.addToStorage(userData)
+        },
+        error: (err) => {
+          this.error = err.error;
+        }
+      })
     } 
   }
 }

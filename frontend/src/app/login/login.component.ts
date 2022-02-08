@@ -24,7 +24,14 @@ export class LoginComponent {
   submit(): void {
     if (this.form.valid) {
       const loginData = this.form.value;
-      this.loginService.login(loginData)
+      this.loginService.login(loginData).subscribe({
+        next:(userData) => {
+          this.loginService.addToStorage(userData)
+        },
+        error: (err) => {
+          this.error = err.error;
+        }
+      })
     }
   }
 
